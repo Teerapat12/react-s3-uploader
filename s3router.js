@@ -44,6 +44,12 @@ function S3Router(options) {
             res.redirect(url);
         });
     };
+    
+    function getFileType(filename){
+    if(!filename)
+        return null;
+    return filename.split('.').pop();
+}
 
     /**
      * Image specific route.
@@ -64,7 +70,7 @@ function S3Router(options) {
      * give temporary access to PUT an object in an S3 bucket.
      */
     router.get('/sign', function(req, res) {
-        var filename = uuid.v4() + "_" + req.query.objectName;
+        var filename = options.filename+"."+getFileType(req.query.objectName)||uuid.v4() + "_" + req.query.objectName;
         var mimeType = req.query.contentType;
         var fileKey = checkTrailingSlash(getFileKeyDir(req)) + filename;
         // Set any custom headers
